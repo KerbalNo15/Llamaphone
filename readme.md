@@ -12,6 +12,9 @@ Llamaphone uses the OpenAI API compatibility recently introduced to Llamafile to
 1. Clone the repository
 2. Open index.html in your favorite web browser and make sure the API Endpoint is set correctly.
 
+## Screenshot
+![](DemoScreenshot.png)
+
 ## Questions
 ```
 Q. Does it work with the actual OpenAI API?
