@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Llamaphone</title>
+	<style>
+        * {
+            font-family: Arial, Helvetica, sans-serif;
+            color: rgb(218, 218, 218);
+        }
+		body {
+			margin: 0;
+			padding: 0;
+			width: 100%;
+            background-color: #2f303d;
+		}
+		
+		.menu {
+            display: unset;
+            top: 0;
+            position: sticky;
+			max-width: 25%;
+			height: 100vh;
+			background-color: #1e1e1e;
+			float: left;
+
+		}
+		
+		.menu ul {
+			list-style: none;
+            place-items: left;
+            flex-direction: column;
+            display: flex;
+            gap: 1rem;
+			margin: 0px, 1rem, 0px, 0px;
+			padding-inline-start: 0;
+		}
+		
+		.menu li {
+            border-radius: 5rem;
+            /* width: 12rem; */
+            text-align: left;
+            display: flex;
+            flex: 0 1 auto;
+			background-color: #1e1e1e;
+            padding: 1rem 1.5rem;
+            margin-right: 2rem;
+            outline: 1px solid #474747;
+		}
+
+		.menu li:hover {
+			background-color: #5e5d5d;
+		}
+	
+		.menu a {
+			color: #333;
+			text-decoration: none;
+		}
+
+        /* Conversation Window */
+        .conversationWindow {
+            display: flex;
+            flex-direction: column;
+            align-content: center;
+            text-align: center;
+            background-color: #2f303d;
+        }
+
+        .conversationList {
+            padding-left: 0px;
+			list-style: none;
+            flex-direction: column;
+        }
+
+        .conversationList li {
+            display: inline-block;
+            /* width: 90%; */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #32303f;
+            min-height: 6rem;
+            flex-grow: 1 0;
+        }
+
+        .conversationList li:nth-child(even) {
+             background-color: #3d3a49;
+        }
+
+        /* Prompt Input Area */
+        .inputPrompt {
+            width: 89%;
+            display: flex;
+            padding: 0.3em;
+            justify-content: center;
+            align-items: center;
+            margin: auto;
+            margin-bottom: 3rem;
+        }
+
+        .inputArea {
+            width: 100%;
+            max-width: 200rem;
+            display: flex;
+            flex-direction: column;
+            z-index: 2;
+            align-items: center;
+        }
+
+        .promptBoxLabel {
+            position: relative;
+            top: -0.7rem;
+            font-size: 1.3rem;
+        }
+
+        .inputPromptBox {
+            height: 6rem;
+            max-height: 50rem;
+            width: 100%;
+            resize: vertical;
+            border: 0.25rem solid transparent;
+            background-color: #3d3a49;
+            color: #fff;
+            font-size: 110%;
+            
+        }
+
+        ::placeholder {
+            color: white;
+            opacity: 50%;
+        }
+
+        .submitPromptButton {
+            width:100px;
+            height: 50px;
+            border-radius: 20px;
+            background-color: #2f303d;
+            color: white;
+            border: none;
+            margin-top: 10px;
+            font-size:larger;
+            outline: 1px solid #565656;
+        }
+
+        .submitPromptButton:hover {
+            background-color: #5e5d5d;
+        }
+
+        .chatMessageDisplay {
+            width: 50%;
+            text-align: left;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+
+        .userMessage {
+            border-radius: 50%;
+            width:30px;
+            height:30px;
+            margin-right: 2rem;
+            display:flex;
+            background-size: cover;
+            display: block;
+            background-image: url('data:image/svg+xml;utf8,<svg version="1.1" viewBox="0 0 512 512" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" fill="%23ce5a5a"><path class="st0" d="M332.933,213.451c-20.713,17.784-47.559,28.624-76.938,28.624c-29.37,0-56.224-10.84-76.928-28.624c-54.991,20.952-92.686,66.126-92.686,132.094v98.082c0,0,14.505,19.331,45.864,37.437v-69.339h28.992v83.228c24.848,9.78,56.243,17.047,94.758,17.047c38.524,0,69.901-7.266,94.767-17.047v-83.228h28.992v69.339c31.359-18.106,45.864-37.437,45.864-37.437v-98.082C425.618,279.577,387.923,234.403,332.933,213.451z"/><path class="st0" d="M255.996,213.902c49.299,0,89.26-39.96,89.26-89.259V89.269C345.255,39.96,305.294,0,255.996,0c-49.3,0-89.268,39.96-89.268,89.269v35.374C166.727,173.942,206.696,213.902,255.996,213.902z"/></svg>')
+        }
+        .botMessage {
+            border-radius: 50%;
+            width:30px;
+            height:30px;
+            margin-right: 2rem;
+            display:flex;
+            background-size: cover;
+            display: block;
+            background-image: url('data:image/svg+xml;utf8,<svg height="800px" width="800px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" fill="%2347ce70"><path class="st0" d="M202.622,344.796l-6.208,11.926l-0.263,0.484c-14.411,24.499-41.026,39.714-69.478,39.714 c-14.272,0-28.371-3.847-40.731-11.122c-18.544-10.908-31.733-28.37-37.122-49.195c-0.238-0.886-0.434-1.78-0.632-2.674 L37.92,412.74h173.617L202.622,344.796z"/><path class="st0" d="M212.883,59.091L66.446,280.944c-19.578,33.283-8.465,76.172,24.844,95.749 c33.299,19.587,76.17,8.464,95.756-24.843l99.391-191.063l-54.788-52.082C217.361,93.974,212.497,77.52,212.883,59.091z M150.794,330.533c-7.808,13.288-24.909,17.716-38.188,9.916c-13.287-7.824-17.724-24.909-9.907-38.196 c7.808-13.288,24.909-17.716,38.187-9.908C154.165,300.161,158.611,317.254,150.794,330.533z"/><path class="st0" d="M216.401,422.247H34.278c-12.402,0-22.449,10.055-22.449,22.457V512h227.012v-67.296 C238.841,432.302,228.794,422.247,216.401,422.247z"/><path class="st0" d="M450.024,185.737c7.184,0,14.082,1.255,20.48,3.559L328.505,19.542c-22.646-24.606-60.956-26.188-85.554-3.535 c-24.606,22.637-26.18,60.949-3.535,85.546l149.955,142.458C390.65,211.663,417.356,185.737,450.024,185.737z M299.584,77.537 c-9.374,8.628-23.973,8.013-32.602-1.361c-8.645-9.375-8.038-23.974,1.345-32.603c9.375-8.644,23.974-8.038,32.619,1.346 C309.575,54.293,308.967,68.892,299.584,77.537z"/><polygon class="st0" points="431.668,365.227 451.246,387.249 470.815,365.227 470.815,328.975 431.668,328.975 	"/><path class="st0" d="M450.024,196.292c-27.698,0-50.155,22.449-50.155,50.155v72.169h100.301v-72.169 C500.171,218.741,477.73,196.292,450.024,196.292z M450.024,264.492c-10.818,0-19.578-8.768-19.578-19.578 c0-10.818,8.76-19.586,19.578-19.586c10.81,0,19.586,8.767,19.586,19.586C469.61,255.723,460.835,264.492,450.024,264.492z"/></svg>')
+        }
+
+        /* Settings Box */
+        .settingsWindow {
+            position: sticky;
+            top: 0;
+			max-width: 25%;
+			height: 100vh;
+			background-color: #1e1e1e;
+			float: left;   
+            list-style: none;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 0px;
+            margin-bottom: 0px;
+			padding-inline-start: 0; 
+            padding-left: 1rem;  
+            padding-right: 2rem; 
+        }
+
+        .settingSlider {
+            display: flex;
+            float: right;
+        }
+
+        .hideSettingsButton {
+            width:100px;
+            height: 50px;
+            border-radius: 20px;
+            background-color: #2f303d;
+            color: white;
+            border: none;
+            margin-top: 10px;
+            font-size:larger;
+            outline: 1px solid #565656;
+            text-align: center;
+        }
+
+        .hideSettingsButton:hover {
+            background-color: #5e5d5d;
+        }
+
+        .initialPromptBox {
+            width: 10rem;
+            height:8rem;
+            background-color: #3f3d46;
+        }
+	</style>
+</head>
+<body>
+	<span class="menu", id="menuBar" style="display: unset;">
+		<ul>
+			<li onClick="resetConversation()">Reset Conversation</li>
+            <li onClick="toggleSettings(0)">Settings</li>
+		</ul>
+	</span>
+
+    <ul class="settingsWindow" id="settingsWindow" style="display: none;">
+        <li style="text-align: center;"><b>Settings</b></li>
+        API Endpoint
+        <input type="text" id="apiEndpoint" style="background-color: #3f3d46;">
+        Temperature
+        <li class="settingSlider"><input type="range" id="temperatureSlider" min="0" max="1.5" step="0.1" value="1" oninput="this.nextElementSibling.innerText = (+this.value).toFixed(1)"><div>1.0</div></li>
+        Top P
+        <li class="settingSlider"><input type="range" id="topPSlider" min="0" max="1" step="0.01" value="1" oninput="this.nextElementSibling.innerText = (+this.value).toFixed(2)"><div>1.00</div></li>
+        Presence Penalty
+        <li class="settingSlider"><input type="range" id="presencePenaltySlider" min="0" max="2" step="0.1" value="0" oninput="this.nextElementSibling.innerText = (+this.value).toFixed(1)"><div>0.0</div></li>
+        Frequency Penalty
+        <li class="settingSlider"><input type="range" id="frequencyPenaltySlider" min="0" max="2" step="0.1" value="0" oninput="this.nextElementSibling.innerText = (+this.value).toFixed(1)"><div>0.0</div></li>
+        Initial Prompt
+        <li><textarea class="initialPromptBox" id="initialPromptBox"></textarea></li>
+        <li onClick="toggleSettings(1)" class="hideSettingsButton">Save and Hide</li>
+    </ul>
+
+	<span class="conversationWindow" >
+		<h1>Llamaphone</h1>
+        <ul class="conversationList" id="chatHistoryBox">
+        </ul>
+        <div class="inputPrompt">
+            <div class="inputArea">
+                <!-- <label class="promptBoxLabel" for="promptInputBox">Prompt Input</label> -->
+                <textarea id="promptInputBox" class="inputPromptBox" placeholder="Type your prompt here"></textarea>
+                <button class="submitPromptButton" id="submitPromptButton" onclick="requestCompletion()">Send</button>
+            </div>
+        </div>
+	</span>
+</body>
+
+<script>
+messages = [];
+apiEndpoint = "http://localhost:8080/v1/chat/completions";
+temperature = 1;
+topP = 1;
+presencePenalty = 0;
+frequencyPenalty = 0;
+initialPrompt = "You are Llama, an AI assistant. Carefully heed the user's instructions.";
+
+window.onload = function() {
+    loadSession(0);
+    populateAllMessages();
+}
+
+function toggleMenu() {
+    let menuBar = document.getElementById("menuBar");
+    if(menuBar.style.display == "none") {
+        menuBar.style.display = "unset"
+    } else {
+        menuBar.style.display = "none"
+    }
+}
+
+async function requestCompletion() {
+    if(messages.length == 0) {
+        messages = [{"role": "system", "content": initialPrompt}]
+        populateAllMessages();
+    }
+    //Disable the submit button while generating
+    let submitButton = document.getElementById("submitPromptButton");
+    submitButton.disabled = true;
+    submitButton.innerText = "Working...";
+
+    //Get text and clear the box
+    let promptInputBox = document.getElementById("promptInputBox");
+    let text = promptInputBox.value;
+    promptInputBox.value = "";
+    //add a new message from the user
+    messages.push({"role": "user", "content": text})
+    createListItem(messages[messages.length-1].content, "user")
+
+    const response = await fetch("http://localhost:8080/v1/chat/completions", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            "stop": null,
+            messages,
+            stream: true,
+            frequency_penalty: frequencyPenalty,
+            presence_penalty: presencePenalty,
+            temperature: temperature,
+            top_p: topP
+        })
+    });
+    //the response is chunked, and it's a weird format
+    const reader = response.body.getReader();
+    //start putting in the message by creating a placeholder
+    messages.push({"role": "assistant", "content": ""})
+    done = false //true once all the data has been received
+    let updateableListItem = createListItem("", "assistant") //put up a placeholder item
+    while(!done) {
+        partial = await reader.read(); //wait for a new chunk
+        done = partial.done //will become true once all the data has been received
+        for(d of new TextDecoder().decode(partial.value).split("\n\n")) //the first response (and maybe others?) have two values. The first chunk is to include the "role": "assistant" response that we don't use
+            if (d != "") { //empty value from the split()
+                parsedPart = JSON.parse(d.substring(6)).choices[0].delta.content //I only care about the delta text
+                if(parsedPart != undefined) { //don't care about the role message or empty final message
+                    messages[messages.length-1].content += parsedPart; //add the delta text to the last message
+                    updateableListItem.innerText += parsedPart;
+                }
+            }
+    }
+
+    //re-enable the submit button
+    submitButton.disabled = false;
+    submitButton.innerText = "Send"
+    saveSession(0);
+}
+
+function createListItem(text, type) {
+    let chatHistoryBox = document.getElementById("chatHistoryBox");
+    let newListItem = document.createElement("li");
+    let profilePic = document.createElement("img")
+    let newListItemChatDisplay = document.createElement("span");
+    profilePic.classList.add(type == "user" ? "userMessage" : type == "assistant" ? "botMessage" : "systemMessage");
+    newListItem.appendChild(profilePic);
+    newListItemChatDisplay.classList.add("chatMessageDisplay");
+    newListItemChatDisplay.innerText = text;
+    newListItem.appendChild(newListItemChatDisplay);
+    chatHistoryBox.appendChild(newListItem);
+    return newListItemChatDisplay;
+}
+
+function resetConversation() {
+    messages = [];
+    apiEndpoint = "http://localhost:8080/v1/chat/completions";
+    temperature = 1;
+    topP = 1;
+    presencePenalty = 0;
+    frequencyPenalty = 0;
+    initialPrompt = "You are Llama, an AI assistant. Carefully heed the user's instructions.";
+    saveSession(0);
+    location.reload()
+}
+
+function toggleSettings(openOrClose) {
+    let menuPanel = document.getElementById("menuBar");
+    let settingsPanel = document.getElementById("settingsWindow");
+    let currentSettingsState = settingsPanel.style.display;
+
+    if(currentSettingsState == "none") {
+        menuPanel.style.display = "none";
+        settingsPanel.style.display = "flex";
+    } else {
+        menuPanel.style.display = "unset";
+        settingsPanel.style.display = "none";
+    }
+    if(openOrClose == 1) { //closing
+        apiEndpoint = document.getElementById("apiEndpoint").value;
+        temperature = parseFloat(document.getElementById("temperatureSlider").value);
+        topP = parseFloat(document.getElementById("topPSlider").value);
+        presencePenalty = parseFloat(document.getElementById("presencePenaltySlider").value);
+        frequencyPenalty = parseFloat(document.getElementById("frequencyPenaltySlider").value);
+        initialPrompt = document.getElementById("initialPromptBox").value;
+        saveSession(0);
+    } else {
+        //set sliders
+        document.getElementById("apiEndpoint").value = apiEndpoint;
+        document.getElementById("temperatureSlider").value = temperature;
+        document.getElementById("topPSlider").value = topP;
+        document.getElementById("presencePenaltySlider").value = presencePenalty;
+        document.getElementById("frequencyPenaltySlider").value = frequencyPenalty;
+        document.getElementById("initialPromptBox").value = initialPrompt;
+
+        //set text
+        document.getElementById("temperatureSlider").nextElementSibling.innerText = temperature;
+        document.getElementById("topPSlider").nextElementSibling.innerText = topP;
+        document.getElementById("presencePenaltySlider").nextElementSibling.innerText = presencePenalty;
+        document.getElementById("frequencyPenaltySlider").nextElementSibling.innerText = frequencyPenalty;
+    }
+}
+
+function loadSession(sessionID) {
+
+    if(sessionID == 0 && localStorage.getItem(sessionID) == null) {
+        messages = [];
+        apiEndpoint = "http://localhost:8080/v1/chat/completions";
+        temperature = 1;
+        topP = 1;
+        presencePenalty = 0;
+        frequencyPenalty = 0;
+        initialPrompt = "You are Llama, an AI assistant. Carefully heed the user's instructions.";
+        saveSession(0);
+    }
+    dataString = JSON.parse(localStorage.getItem(sessionID));
+    messages = dataString.messages;
+    apiEndpoint = dataString.apiEndpoint;
+    temperature = dataString.temperature;
+    topP = dataString.topP;
+    presencePenalty = dataString.presencePenalty;
+    frequencyPenalty = dataString.frequencyPenalty;
+    initialPrompt = dataString.initialPrompt;
+
+}
+
+function saveSession(sessionID) {
+    let sessionData = {messages: messages, apiEndpoint: apiEndpoint, temperature: temperature, topP: topP, presencePenalty: presencePenalty, frequencyPenalty: frequencyPenalty, initialPrompt: initialPrompt};
+    dataString = JSON.stringify(sessionData)
+    localStorage.setItem(sessionID, dataString);
+}
+
+function populateAllMessages() {
+    for(message of messages) {
+        createListItem(message.content, message.role)
+    }
+}
+
+// function createListItem(text, type) {
+//     let chatHistoryBox = document.getElementById("chatHistoryBox");
+//     let newListItem = document.createElement("li");
+//     let profilePic = document.createElement("img")
+//     let newListItemChatDisplay = document.createElement("span");
+//     profilePic.classList.add(type == "user" ? "userMessage" : type == "assistant" ? "botMessage" : "systemMessage");
+//     newListItem.appendChild(profilePic);
+//     newListItemChatDisplay.classList.add("chatMessageDisplay");
+//     newListItemChatDisplay.innerText = text;
+//     newListItem.appendChild(newListItemChatDisplay);
+//     chatHistoryBox.appendChild(newListItem);
+//     return newListItemChatDisplay;
+// }
+
+</script>
+</html>
