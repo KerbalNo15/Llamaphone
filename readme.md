@@ -10,12 +10,17 @@ Llamaphone uses the OpenAI API compatibility recently introduced to Llamafile to
 ## Installation
 
 1. Clone the repository
-2. Host index.html with your favorite web server, or open it from the file system. It works either way!
+2. Open index.html in your favorite web browser and make sure the API Endpoint is set correctly.
 
 ## Questions
 ```
 Q. Does it work with the actual OpenAI API?
 A. No. Llamaphone doesn't support API keys. If you want to add this functionality, be my guest.
+```
+
+```
+Q. Why no HTTPS?
+A. You're welcome to add it, but I didn't take the time because the primary goal of this project is to get beginners up and running as fast as possible. I'm assuming that most people will run both Llamafile and Llamaphone locally, hence no traffic will ever leave the computer. HTTPS wouldn't be to hard to implement if you want to do so.
 ```
 
 ```
