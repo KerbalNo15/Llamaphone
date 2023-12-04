@@ -133,7 +133,7 @@
             width:100px;
             height: 50px;
             border-radius: 20px;
-            background-color: #2f303d;
+            background-color: #47ce70;
             color: white;
             border: none;
             margin-top: 10px;
@@ -142,7 +142,7 @@
         }
 
         .submitPromptButton:hover {
-            background-color: #5e5d5d;
+            background-color: #52e87f;
         }
 
         .chatMessageDisplay {
@@ -371,20 +371,17 @@ function toggleSettings(openOrClose) {
     let settingsPanel = document.getElementById("settingsWindow");
     let currentSettingsState = settingsPanel.style.display;
 
-    if(currentSettingsState == "none") {
-        menuPanel.style.display = "none";
-        settingsPanel.style.display = "flex";
-    } else {
-        menuPanel.style.display = "unset";
-        settingsPanel.style.display = "none";
-    }
     if(openOrClose == 1) { //closing
+	menuPanel.style.display = "unset";
+        settingsPanel.style.display = "none";
         apiEndpoint = document.getElementById("apiEndpoint").value;
         temperature = parseFloat(document.getElementById("temperatureSlider").value);
         topP = parseFloat(document.getElementById("topPSlider").value);
         presencePenalty = parseFloat(document.getElementById("presencePenaltySlider").value);
         frequencyPenalty = parseFloat(document.getElementById("frequencyPenaltySlider").value);
         initialPrompt = document.getElementById("initialPromptBox").value;
+	menuPanel.style.display = "unset";
+        settingsPanel.style.display = "none";
         saveSession(0);
     } else {
         //set sliders
@@ -400,6 +397,8 @@ function toggleSettings(openOrClose) {
         document.getElementById("topPSlider").nextElementSibling.innerText = topP;
         document.getElementById("presencePenaltySlider").nextElementSibling.innerText = presencePenalty;
         document.getElementById("frequencyPenaltySlider").nextElementSibling.innerText = frequencyPenalty;
+        menuPanel.style.display = "none";
+        settingsPanel.style.display = "flex";
     }
 }
 
