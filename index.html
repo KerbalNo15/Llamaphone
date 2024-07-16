@@ -97,13 +97,18 @@
             margin-bottom: 3rem;
         }
 
+        .chatForm {
+            width:100%;
+        }
+
         .inputArea {
             width: 100%;
             max-width: 200rem;
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             z-index: 2;
             align-items: center;
+            justify-content: center;
         }
 
         .promptBoxLabel {
@@ -113,15 +118,15 @@
         }
 
         .inputPromptBox {
-            height: 6rem;
+            height: 2.3rem;
             max-height: 50rem;
-            width: 100%;
+            border-radius: 20px;
+            width: 60%;
             resize: vertical;
             border: 0.25rem solid transparent;
             background-color: #3d3a49;
             color: #fff;
-            font-size: 110%;
-            
+            font-size: 110%;          
         }
 
         ::placeholder {
@@ -130,13 +135,14 @@
         }
 
         .submitPromptButton {
+            margin-left: 10px;
             width:100px;
-            height: 50px;
+            height: 3rem;
             border-radius: 20px;
             background-color: #47ce70;
             color: white;
             border: none;
-            margin-top: 10px;
+            /* margin-top: 10px; */
             font-size:larger;
             outline: 1px solid #565656;
         }
@@ -189,11 +195,6 @@
             padding-right: 2rem; 
         }
 
-        .settingSlider {
-            display: flex;
-            float: right;
-        }
-
         .hideSettingsButton {
             width:100px;
             height: 50px;
@@ -229,16 +230,7 @@
     <ul class="settingsWindow" id="settingsWindow" style="display: none;">
         <li style="text-align: center;"><b>Settings</b></li>
         API Endpoint
-        <input type="text" id="apiEndpoint" style="background-color: #3f3d46;">
-        Temperature
-        <li class="settingSlider"><input type="range" id="temperatureSlider" min="0" max="1.5" step="0.1" value="1" oninput="this.nextElementSibling.innerText = (+this.value).toFixed(1)"><div>1.0</div></li>
-        Top P
-        <li class="settingSlider"><input type="range" id="topPSlider" min="0" max="1" step="0.01" value="1" oninput="this.nextElementSibling.innerText = (+this.value).toFixed(2)"><div>1.00</div></li>
-        Presence Penalty
-        <li class="settingSlider"><input type="range" id="presencePenaltySlider" min="0" max="2" step="0.1" value="0" oninput="this.nextElementSibling.innerText = (+this.value).toFixed(1)"><div>0.0</div></li>
-        Frequency Penalty
-        <li class="settingSlider"><input type="range" id="frequencyPenaltySlider" min="0" max="2" step="0.1" value="0" oninput="this.nextElementSibling.innerText = (+this.value).toFixed(1)"><div>0.0</div></li>
-        Initial Prompt
+        <input type="text" id="apiEndpoint" style="background-color: #3f3d46;">Initial Prompt
         <li><textarea class="initialPromptBox" id="initialPromptBox"></textarea></li>
         <li onClick="toggleSettings(1)" class="hideSettingsButton">Save and Hide</li>
     </ul>
@@ -249,9 +241,11 @@
         </ul>
         <div class="inputPrompt">
             <div class="inputArea">
+                <form class="chatForm">
                 <!-- <label class="promptBoxLabel" for="promptInputBox">Prompt Input</label> -->
-                <textarea id="promptInputBox" class="inputPromptBox" placeholder="Type your prompt here"></textarea>
+                <input type="text" id="promptInputBox" class="inputPromptBox" placeholder="Type your prompt here" onsubmit="requestCompletion();"></input>
                 <button class="submitPromptButton" id="submitPromptButton" onclick="requestCompletion()">Send</button>
+            </form>
             </div>
         </div>
 	</span>
@@ -260,10 +254,6 @@
 <script>
 messages = [];
 apiEndpoint = "http://localhost:8080/v1/chat/completions";
-temperature = 1;
-topP = 1;
-presencePenalty = 0;
-frequencyPenalty = 0;
 initialPrompt = "You are Llama, an AI assistant. Carefully heed the user's instructions.";
 
 window.onload = function() {
@@ -306,11 +296,7 @@ async function requestCompletion() {
         body: JSON.stringify({
             "stop": null,
             messages,
-            stream: true,
-            frequency_penalty: frequencyPenalty,
-            presence_penalty: presencePenalty,
-            temperature: temperature,
-            top_p: topP
+            stream: true
         })
     });
     //the response is chunked, and it's a weird format
@@ -354,12 +340,6 @@ function createListItem(text, type) {
 
 function resetConversation() {
     messages = [];
-    apiEndpoint = "http://localhost:8080/v1/chat/completions";
-    temperature = 1;
-    topP = 1;
-    presencePenalty = 0;
-    frequencyPenalty = 0;
-    initialPrompt = "You are Llama, an AI assistant. Carefully heed the user's instructions.";
     saveSession(0);
     location.reload()
 }
@@ -373,28 +353,15 @@ function toggleSettings(openOrClose) {
 	menuPanel.style.display = "unset";
         settingsPanel.style.display = "none";
         apiEndpoint = document.getElementById("apiEndpoint").value;
-        temperature = parseFloat(document.getElementById("temperatureSlider").value);
-        topP = parseFloat(document.getElementById("topPSlider").value);
-        presencePenalty = parseFloat(document.getElementById("presencePenaltySlider").value);
-        frequencyPenalty = parseFloat(document.getElementById("frequencyPenaltySlider").value);
         initialPrompt = document.getElementById("initialPromptBox").value;
-	menuPanel.style.display = "unset";
+	    menuPanel.style.display = "unset";
         settingsPanel.style.display = "none";
         saveSession(0);
     } else {
         //set sliders
         document.getElementById("apiEndpoint").value = apiEndpoint;
-        document.getElementById("temperatureSlider").value = temperature;
-        document.getElementById("topPSlider").value = topP;
-        document.getElementById("presencePenaltySlider").value = presencePenalty;
-        document.getElementById("frequencyPenaltySlider").value = frequencyPenalty;
         document.getElementById("initialPromptBox").value = initialPrompt;
 
-        //set text
-        document.getElementById("temperatureSlider").nextElementSibling.innerText = temperature;
-        document.getElementById("topPSlider").nextElementSibling.innerText = topP;
-        document.getElementById("presencePenaltySlider").nextElementSibling.innerText = presencePenalty;
-        document.getElementById("frequencyPenaltySlider").nextElementSibling.innerText = frequencyPenalty;
         menuPanel.style.display = "none";
         settingsPanel.style.display = "flex";
     }
@@ -405,33 +372,27 @@ function loadSession(sessionID) {
     if(sessionID == 0 && localStorage.getItem(sessionID) == null) {
         messages = [];
         apiEndpoint = "http://localhost:8080/v1/chat/completions";
-        temperature = 1;
-        topP = 1;
-        presencePenalty = 0;
-        frequencyPenalty = 0;
         initialPrompt = "You are Llama, an AI assistant. Carefully heed the user's instructions.";
         saveSession(0);
     }
     dataString = JSON.parse(localStorage.getItem(sessionID));
     messages = dataString.messages;
     apiEndpoint = dataString.apiEndpoint;
-    temperature = dataString.temperature;
-    topP = dataString.topP;
-    presencePenalty = dataString.presencePenalty;
-    frequencyPenalty = dataString.frequencyPenalty;
     initialPrompt = dataString.initialPrompt;
 
 }
 
 function saveSession(sessionID) {
-    let sessionData = {messages: messages, apiEndpoint: apiEndpoint, temperature: temperature, topP: topP, presencePenalty: presencePenalty, frequencyPenalty: frequencyPenalty, initialPrompt: initialPrompt};
+    let sessionData = {messages: messages, apiEndpoint: apiEndpoint, initialPrompt: initialPrompt};
     dataString = JSON.stringify(sessionData)
     localStorage.setItem(sessionID, dataString);
 }
 
 function populateAllMessages() {
     for(message of messages) {
-        createListItem(message.content, message.role)
+        if(message.role != "system") { //Don't print the system message at the top of the chat.
+            createListItem(message.content, message.role)
+        }
     }
 }
 
