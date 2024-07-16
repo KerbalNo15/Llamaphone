@@ -4,13 +4,14 @@ A single-file static frontend to go with your [single-file LLM](https://github.c
 
 ## Details
 
-With all the hype around the recent release of Llamafile, I thought it'd be nice to have a dedicated frontend.
-Llamaphone uses the OpenAI API compatibility recently introduced to Llamafile to interact with the model. Your chat and preferences are stored in browser storage, so you can close the window and come back to your conversation later.
+Chat with Llamafile using a sleek, modern UI.
+Llamaphone uses Llamafile's API compatibility to interact with the model. Your chat and preferences are stored in browser storage, so you can close the window and come back to your conversation later. You can also connect to instances of Llamafile running on a remote computer, such as a local server (just remember to start Llamafile listening on an external address.)
 
 ## Installation
 
 1. Clone the repository
 2. Open index.html in your favorite web browser and make sure the API Endpoint is set correctly.
+3. Have fun
 
 ## Screenshot
 ![](DemoScreenshot.png)
