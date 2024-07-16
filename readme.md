@@ -5,7 +5,7 @@ A single-file static frontend to go with your [single-file LLM](https://github.c
 ## Details
 
 Chat with Llamafile using a sleek, modern UI.
-Llamaphone uses Llamafile's API compatibility to interact with the model. Your chat and preferences are stored in browser storage, so you can close the window and come back to your conversation later. You can also connect to instances of Llamafile running on a remote computer, such as a local server (just remember to start Llamafile listening on an external interface, e.g. 0.0.0.0 with ``--host 0.0.0.0``.)
+Llamaphone uses Llamafile's API support to interact with your choice of large language model. Your chat and preferences are stored in browser storage, so you can close the window and come back to your conversation later. You can also connect to instances of Llamafile running on a remote computer, such as a home server (just remember to start Llamafile listening on an external interface, e.g. 0.0.0.0 with ``--host 0.0.0.0``.)
 
 ## Installation
 
@@ -18,8 +18,8 @@ Llamaphone uses Llamafile's API compatibility to interact with the model. Your c
 
 ## Questions
 ```
-Q. Does it work with the actual OpenAI API?
-A. No. Llamaphone doesn't support API keys. If you want to add this functionality, please be my guest.
+Q. Does it work with the OpenAI API?
+A. Yes and no. Llamaphone will probably work with other unauthenticated OpenAI-like endpoints, but doesn't support API keys. If you want to add this functionality, please be my guest.
 ```
 
 ```
